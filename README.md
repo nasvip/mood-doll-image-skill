@@ -2,8 +2,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Skill_Name-yanshi--wawa-ff4d4f?style=flat-square" alt="Skill Name" />
-  <img src="https://img.shields.io/badge/Version-1.2-blue?style=flat-square" alt="Version" />
-  <img src="https://img.shields.io/badge/Type-Visual_Workflow-8a2be2?style=flat-square" alt="Type" />
+  <img src="https://img.shields.io/badge/Version-1.3-blue?style=flat-square" alt="Version" />
+  <img src="https://img.shields.io/badge/Engine-GPT--Image--2.5%20%7C%20Nano--Banana--2%20%7C%20Gemini-8a2be2?style=flat-square" alt="Engine" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
   <img src="https://img.shields.io/badge/Platform-Hermes%20%7C%20Grok%20%7C%20Multi--Agent-orange?style=flat-square" alt="Platform" />
 </p>
@@ -17,7 +17,8 @@
 | **GitHub 仓库名** | `nasvip/mood-doll-image-skill` |
 | **技能目录名 (Skill Name)** | `yanshi-wawa`（**必须与 `SKILL.md` 中 `name` 完全一致**） |
 | **中文名称** | 厌世娃娃 · 3D人物视觉控制系统 |
-| **工作流语言** | 中文控制指令 + 纯正英文精准生图提示词 |
+| **深度适配引擎** | **`gpt-image-2.5-sunburst`**（物理光学/微表面）、**`nano-banana-2`**（中英排版大字）、**`gemini-3.1-flash-image`**（连贯多模态） |
+| **工作流语言** | 中文控制流程 + 工业级纯正英文物理渲染提示词 |
 | **适用环境** | Hermes Agent、Grok 自定义技能、OpenClaw 及主流多 Agent 框架 |
 
 > ⚠️ **关键注意**：本技能标准定义名称与目录名为 **`yanshi-wawa`**。通过 Git 克隆或手动解压时，请确保目标文件夹名称为 **`yanshi-wawa`**，以保证各 Agent 框架的 YAML 前置元数据解析与技能加载器正常识别。
@@ -26,29 +27,56 @@
 
 ## 1. 这是什么
 
-这是一套专为 AI Agent（Hermes、Grok 等）设计的高维人物视觉控制技能。
+这是一套专为顶级 AI 生图生态设计的高维人物视觉控制工作流。
 
-它的核心理念不是粗暴地「套一个厌世滤镜」，而是把「一个人」解构成 7 个彼此正交、可独立旋拧的物理与视觉旋钮：
+它的核心理念不是粗暴地「套一个厌世滤镜」，而是把「一个人」解构成 7 个彼此正交、可独立旋拧的物理与视觉旋钮，并在出图前接入多模型渲染适配器：
 
 ```text
-[原始输入] ──> 1. IDENTITY ──> 2. DOLL ──> 3. BEAUTY ──> 4. MOOD ──> 5. SHOT ──> 6. SCALE ──> 7. FINISH ──> [最终成图]
-               (锁住身份)     (娃娃化骨架)   (肤质精修)    (20种情绪)   (构图机位)    (巨物/微缩)   (排版材质)
+[原始输入] ──> 1. IDENTITY ──> 2. DOLL ──> 3. BEAUTY ──> 4. MOOD ──> 5. SHOT ──> 6. SCALE ──> 7. FINISH ──> [ADAPTER] ──> [最终成图]
+               (锁住身份)     (娃娃化骨架)   (肤质精修)    (20种情绪)   (构图机位)    (巨物/微缩)   (排版材质)    (模型适配)
 ```
 
 1. **先锁住「这个人是谁」**：固定骨骼五官、发型配饰与核心特征，拒绝换脸与漂移；
 2. **再决定娃娃化程度**：从轻微 Stylize 到标准收藏娃，再到极端大头树脂设计师玩具；
-3. **分层叠加视觉属性**：独立控制美颜、20种精微态度情绪、镜头机位、空间尺度、材质质感与杂志封面排版。
+3. **分层叠加视觉属性**：独立控制美颜、20种精微态度情绪、镜头机位、空间尺度、材质质感与杂志封面排版；
+4. **模型专属光学注入**：针对底层生图引擎（GPT-Image-2.5 物理级微表面散射、Nano-Banana-2 中文排版大字等）自动注入最优提示词架构。
 
 同一角色在连续多轮生成时，**身份与娃娃骨架保持恒定**，只修改你指定的那一层旋钮，彻底解决 AI 绘图「一改提示词就换了个人」的顽疾。
 
 ### 典型触发词
 - 厌世娃娃 / 3D 娃娃化 / 收藏娃 / 情绪表情库
-- 高相似锁 / 巨物微缩 / 杂志封面排版
+- 高相似锁 / 巨物微缩 / 杂志封面排版 / 情绪大字
 - 把这张成人照片做成收藏娃 / 情绪娃娃写真
 
 ---
 
-## 2. 目录结构
+## 2. 深度适配三大主力模型
+
+本技能针对当前三大主流生图模型进行了底层提示词工程与参数解构：
+
+### 🔥 1. GPT-Image-2.5 (特别是 `gpt-image-2.5-sunburst`)
+- **定位**：顶奢级物理微表面与人偶质感渲染底座；
+- **专属调优**：
+  - **微表面次表面散射 (SSS)**：注入 `dry satin resin, tactile matte finish, subsurface scattering depth 1.0mm, micro-surface roughness 0.35`，消除油光与塑料感，呈现温润哑光树脂质感；
+  - **摄影棚级光学系统**：注入哈苏中画幅相机与 `100mm f/2.2` 肖像镜头、`120cm` 八角柔光箱（Octabox）漫反射布光；
+  - **纯正向材质描述**：彻底摒弃容易引发模型负向聚焦的「not sweaty, not oily」弱否定词，改用全正向高光约束（仅限眼角与下唇微小点）；
+  - **分辨率与质量**：适配 4K UHD 超高分辨率与 `quality: max/xhigh` 旗舰参数。
+
+### 🔤 2. Nano-Banana-2
+- **定位**：杂志大刊封面排版、中英大字海报神器；
+- **专属调优**：
+  - **中文字符排版解禁**：原生支持中文态度大字（如 `「厌世」`、`「人间清醒」`、`「先喝咖啡」`、`「今天不上班」`）；
+  - **结构化排版语法**：规范化 `Headline: "[文字]"` 语法槽，支持杂志刊头（Masthead）、卷号、条形码与极简野兽派平面版式。
+
+### ⚡ 3. Gemini-3.1-Flash-Image
+- **定位**：多模态长上下文因果故事与复杂道具互动；
+- **专属调优**：
+  - **自然叙事流结构**：放弃生硬的逗号堆叠词，采用段落分明的连贯语义流；
+  - **空间因果逻辑**：在微缩（坐在键盘空格键）或巨物（下巴抵在巨型咖啡杯沿）场景中精准锚定接触点与物理尺度。
+
+---
+
+## 3. 目录结构
 
 ```text
 yanshi-wawa/
@@ -59,68 +87,61 @@ yanshi-wawa/
 ├── assets/
 │   └── mood-index.txt        # 20 种态度情绪编号与速查表
 └── references/
+    ├── adapters.md           # ★ 多模型适配器（GPT-Image-2.5 / Nano-Banana-2 / Gemini 深度规范）
     ├── likeness.md           # 人物相似度锁 LIKE_1–3
     ├── doll.md               # 娃娃化骨架锁 DOLL_1–3
     ├── beauty.md             # 美颜精修层 BEAUTY_OFF / SOFT / STRONG
     ├── mood.md               # 20 种精微情绪表情器（英文提示词段）
     ├── shot.md               # 镜头、构图与机位控制
     ├── giant.md              # 巨物 / 微缩 / 超空间比例
-    ├── style.md              # 材质、造型预设与布光
-    ├── layout.md             # 素图 / 杂志排版 / 中英大字 / 双人
+    ├── style.md              # 材质微表面、造型预设与布光系统
+    ├── layout.md             # 杂志排版、中英文大字与留白设计
     ├── recipes.md            # 现成爆款视觉配方 R01–R11
-    └── prompt-template.md    # 改图 / 文生图提示词母版与会话 DNA
+    └── prompt-template.md    # 多模型专属提示词母版与会话 DNA
 ```
-
-- `SKILL.md` 掌控主流程控制逻辑与自检纪律；
-- `references/` 为模块化分层知识库，Agent 仅在调度具体层时按需读取，避免上下文污染。
 
 ---
 
-## 3. 安装与配置
+## 4. 安装与配置
 
 由于 GitHub 仓库名为 `mood-doll-image-skill`，而技能内定义标识名为 `yanshi-wawa`，克隆时**请务必直接重命名目标目录为 `yanshi-wawa`**。
 
 ### 方式 A：Hermes Agent 环境（推荐）
-将本技能克隆或软链至技能目录：
 ```bash
 cd ~/.hermes/skills
 git clone https://github.com/nasvip/mood-doll-image-skill.git yanshi-wawa
 ```
-重载或新起会话即可自动识别技能 `yanshi-wawa`。
 
 ### 方式 B：Grok 环境
-将文件夹放置在 Grok 的用户技能路径下：
 ```bash
 cd /home/workdir/.grok/skills
 git clone https://github.com/nasvip/mood-doll-image-skill.git yanshi-wawa
-```
-验证技能合法性：
-```bash
 bash /root/.grok/skills/skill-creator/scripts/validate-skill.sh /home/workdir/.grok/skills/yanshi-wawa
 ```
 
-### 方式 C：其他 Agent / 手动加载
-直接将整个 `yanshi-wawa` 文件夹放入对应系统的 `skills/` 目录，确保 `SKILL.md` 位于 `yanshi-wawa/SKILL.md`。
+### 方式 C：其他 Agent 框架
+将整个 `yanshi-wawa` 文件夹放入对应系统的 `skills/` 目录，确保 `SKILL.md` 位于 `yanshi-wawa/SKILL.md`。
 
 ---
 
-## 4. 核心组装原则
+## 5. 核心组装原则
 
-### 4.1 组装顺序（绝对不可颠倒）
+### 5.1 组装顺序（绝对不可颠倒）
 
 | 顺序 | 控制层 | 核心参考文件 | 作用说明 |
 |:---:|:---|:---|:---|
 | **1** | **IDENTITY** | `references/likeness.md` | 锁定性别、年龄段、脸型骨相、眉眼距、鼻翼嘴形、发型发际与标志配饰 |
 | **2** | **DOLL** | `references/doll.md` | 确立娃娃骨架：头身比、杏仁大眼、厚眼睑覆瞳、短面中、半哑树脂肌 |
 | **3** | **BEAUTY** | `references/beauty.md` | 平额纹、淡法令纹、均匀缎面质感；**绝不换骨、绝不幼态** |
-| **4** | **MOOD** | `references/mood.md` | 精细调节眼皮开度、视线方向、眉形微挑、嘴角与肩颈姿态 |
+| **4** | **MOOD** | `references/mood.md` | 精细调节眼皮开度、视线方向、眉形微挑、嘴角与肩颈姿态（共20种） |
 | **5** | **SHOT** | `references/shot.md` | 确定景别（超特写/半身/全景）、焦段（85mm/鱼眼）、俯仰机位 |
 | **6** | **SCALE** | `references/giant.md` | 物理比例控制：日常正常 / 城市巨人 / 巨型静物 / 微缩键帽 |
 | **7** | **FINISH** | `references/style.md` + `layout.md` | 材质预设（西装/皮衣）、柔光箱布光与封面排版设计 |
+| **8** | **ADAPTER** | `references/adapters.md` | 针对特定生图模型注入物理光学参数、排版块或叙事语法 |
 
 > **铁律**：后执行的层**不得改写**前一层已经锁死的骨骼架构。
 
-### 4.2 验收合格标准
+### 5.2 验收合格标准
 - **核心及格线**：「一眼是收藏娃娃，二眼还是这个人」。
 - **严重不及格（判定为生成漂移）**：
   - ❌ 真人五官比例 + 强磨皮 = 精修证件照
@@ -128,7 +149,7 @@ bash /root/.grok/skills/skill-creator/scripts/validate-skill.sh /home/workdir/.g
   - ❌ 头虽很大但面容完全换了 = 另一个陌生人
   - ❌ 身体幼态婴儿化 = 违背成人收藏娃准则
 
-### 4.3 实拍总结出的对抗性硬规则
+### 5.3 实拍总结出的对抗性硬规则
 当输入为真人照片改图时，模型极易黏滞在原图比例上：
 1. **默认档位**：有照片时默认使用 **`LIKE_2 + DOLL_2`**，切忌一开始就上 `LIKE_3`（高锁会彻底压死娃娃感）。
 2. **母句完整**：每张提示词必须完整粘贴 DOLL 母句，严禁仅写增量描述。
@@ -137,22 +158,7 @@ bash /root/.grok/skills/skill-creator/scripts/validate-skill.sh /home/workdir/.g
 
 ---
 
-## 5. 档位配置速查
-
-### 5.1 默认档位
-
-| 参数项 | 默认值 | 详细说明 |
-|---|---|---|
-| **LIKE** | 2（有照片）/ 1（纯文字） | 2 档锁眉眼鼻嘴与特征发型，保留娃娃重塑空间 |
-| **DOLL** | 2 | 标准 3D 收藏娃，杏仁大眼、厚眼睑、短面中 |
-| **BEAUTY** | SOFT | 抹平额纹与法令纹，匀净肤色，不改变成年人骨相 |
-| **MOOD** | 01 厌世冷眼 | 核心基底表情，半阖眼睑微斜视 |
-| **SHOT** | 半身三点柔光 | 兼顾人物表情与服装材质质感 |
-| **SCALE** | NORMAL | 正常人体与环境比例 |
-| **LAYOUT** | 素图（CLEAN） | 纯粹高质量大片，无杂乱入画文字 |
-| **画幅** | 竖构图（Portrait） | 远景、双人互动、城市巨物自动切为横构图（Landscape） |
-
-### 5.2 20 种态度情绪表（速查）
+## 6. 20 种态度情绪表（速查）
 
 完整英文提示词段落请查阅 `references/mood.md` 与 `assets/mood-index.txt`：
 
@@ -181,7 +187,7 @@ bash /root/.grok/skills/skill-creator/scripts/validate-skill.sh /home/workdir/.g
 
 ---
 
-## 6. 现成经典视觉配方
+## 7. 现成经典视觉配方
 
 详见 `references/recipes.md`，使用时可直接指定配方编号：
 
@@ -199,37 +205,6 @@ bash /root/.grok/skills/skill-creator/scripts/validate-skill.sh /home/workdir/.g
 
 ---
 
-## 7. 提示词生成母版（示例）
-
-有参考照片时，Agent 构建的英文提示词架构如下（完整版以 `references/prompt-template.md` 为准）：
-
-```text
-Use this photo only as identity reference for an adult [man/woman].
-Keep hair family, brow angle, nose character, mouth width, and signature accessories.
-
-Collectible 3D fashion-doll character, not a retouched photo:
-slightly oversized head, very large horizontal almond eyes,
-heavy soft eyelids covering the top of the iris, shortened midface,
-small refined nose, compact mouth, dry satin resin skin with
-subsurface scatter and tiny freckles.
-Highlight only on the lower lip and inner eye corner.
-Not glossy, not sweaty, not oily, not a live-action photograph,
-not anime lineart, not a baby face, not a passport portrait.
-
-Beautify softly: smooth forehead with no wrinkles, even satin complexion.
-Keep adult bone structure.
-
-Mood: [选填 20 种情绪之一的英文控制段落]
-Camera: [镜头与景别描述]
-Scale: [尺度与环境参考物]
-Wardrobe and setting: [服装预设与光影布光]
-
-High-end 3D character render, tactile fabrics, soft fashion lighting.
-Same person. Dry satin resin face.
-```
-
----
-
 ## 8. 常见问题与崩坏自救
 
 | 异常现象 | 核心根因 | 修正方案 |
@@ -242,12 +217,16 @@ Same person. Dry satin resin face.
 
 ---
 
-## 9. 安全边界与合规
+## 9. 版本历史
 
-本技能严格遵守以下原则：
-- 🚫 **严禁未成年人**：拒绝未成年人照片的娃娃化、改图或微缩；
-- 🚫 **严禁成人色情**：禁止生成任何性化、色情或低俗向内容；
-- 🚫 **尊重肖像合法性**：知名公众人物必须具备公开合法参考源，严禁捏造与恶意冒充。
+- **v1.3 (2026-09)**：
+  - 深度适配 **`gpt-image-2.5-sunburst`**，注入物理级微表面粗糙度（0.35）、次表面散射（SSS 1.0mm）、哈苏 100mm 镜头与 120cm 八角柔光箱；
+  - 深度适配 **`nano-banana-2`**，解禁中英双语杂志封面、海报大字与极简排版语法；
+  - 深度适配 **`gemini-3.1-flash-image`**，支持连贯多模态自然语言流；
+  - 新增 `references/adapters.md` 模型适配矩阵。
+- **v1.2**：更名为「厌世娃娃」，目录规范为 `yanshi-wawa`，剔除外部品牌干扰，规范化 MIT 开源协议。
+- **v1.1**：有照片默认 LIKE_2，引入 BEAUTY 独立层与半哑树脂硬规则。
+- **v1.0**：首版 7 层视觉旋钮骨架与 20 种情绪库。
 
 ---
 
